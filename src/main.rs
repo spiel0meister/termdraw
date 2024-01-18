@@ -9,7 +9,7 @@ use crossterm::{
 };
 
 mod shape;
-use shape::Drawable;
+use shape::*;
 
 fn main() -> Result<()> {
     let mut out = stdout();
@@ -19,10 +19,10 @@ fn main() -> Result<()> {
         queue!(out, SetCursorStyle::SteadyBlock)?;
 
         let (w, h) = size()?;
-        shape::draw_background!(out, Black);
-        shape::draw_line!(out, 0, 0, 10, 10, White);
+        let custom = CustomShape(vec![Point(0, 0), Point(10, 0), Point(5, 5)]);
+        custom.draw(&mut out, White, Reset)?;
 
-        queue!(out, MoveTo(w - 1, h - 1))?;
+        // queue!(out, MoveTo(w - 1, h - 1))?;
 
         out.flush()?;
 

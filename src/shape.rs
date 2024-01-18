@@ -1,4 +1,4 @@
-use std::io::{Stdout, Result};
+use std::io::{Stdout, Result, Error};
 use crossterm::{
     cursor::MoveTo,
     style::{Print, SetBackgroundColor, Color},
@@ -56,15 +56,38 @@ impl Drawable for Line {
                 queue!(stdout, Print(" "))?;
             }
         } else {
-            let y_delta = self.3 - self.1;
-            let x_chunks = (self.2 - self.0) / y_delta;
+            let y_delta = self.3 as i32 - self.1 as i32;
+            let x_chunks = (self.2 as i32 - self.0 as i32) / y_delta;
             for y_offset in 0..y_delta {
                 for x_offset in (x_chunks * y_offset)..(x_chunks * y_offset + 1) {
-                    queue!(stdout, MoveTo(self.0 + x_offset, self.1 + y_offset))?;
+                    queue!(stdout, MoveTo((self.0 as i32 + x_offset) as u16, (self.1 as i32 + y_offset) as u16))?;
                     queue!(stdout, Print(" "))?;
                 }
             }
         }
+
+        Ok(())
+    }
+}
+
+pub struct CustomShape(pub Vec<Point>);
+
+impl Drawable for CustomShape {
+    fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()> {
+        if self.0.len() < 3 {
+            return Err(Error::new(std::io::ErrorKind::Other, "Not enough vertecies!"));
+        }
+
+        for i in 0..self.0.len() - 1 {
+            let cur = &self.0[i];
+            let next = &self.0[i + 1];
+
+            Line(cur.0, cur.1, next.0, next.1).draw(stdout, stroke_color, fill_color)?;
+        }
+
+        let first = self.0.first().unwrap();
+        let last = self.0.last().unwrap();
+        Line(last.0, last.1, first.0, first.1).draw(stdout, stroke_color, fill_color)?;
 
         Ok(())
     }
