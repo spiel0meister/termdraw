@@ -6,10 +6,6 @@ use crossterm::{
     queue
 };
 
-fn mag(x: i32, y: i32) -> u16 {
-    ((x.pow(2) + y.pow(2)) as f32).sqrt().floor() as u16
-}
-
 pub trait Drawable {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()>;
 }
