@@ -5,7 +5,9 @@ use std::{
 };
 use crossterm::{
     terminal::{Clear, ClearType, size},
-    style::Color::*, cursor::{SetCursorStyle, MoveTo}, queue
+    style::Color::*,
+    cursor::SetCursorStyle,
+    queue
 };
 
 mod shape;
