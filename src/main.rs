@@ -1,10 +1,9 @@
 use std::{
-    io::{stdout, Write, Error, Result, ErrorKind},
+    io::{stdout, Write, Result},
     thread::sleep,
     time::Duration
 };
 use crossterm::{
-    QueueableCommand,
     terminal::{Clear, ClearType, size},
     style::Color::*, cursor::{SetCursorStyle, MoveTo}, queue
 };
