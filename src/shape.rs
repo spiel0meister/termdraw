@@ -40,6 +40,36 @@ impl Drawable for Point {
     }
 }
 
+pub struct Line(pub u16, pub u16, pub u16, pub u16);
+
+impl Drawable for Line {
+    fn draw(&self, stdout: &mut Stdout, stroke_color: Color, _fill_color: Color) -> Result<()> {
+        queue!(stdout, SetBackgroundColor(stroke_color))?;
+        if self.0 == self.2 {
+            for y_offset in 0..self.3 - 1 {
+                queue!(stdout, MoveTo(self.0, self.1 + y_offset))?;
+                queue!(stdout, Print(" "))?;
+            }
+        } else if self.1 == self.3 {
+            for x_offset in 0..self.2 - 1 {
+                queue!(stdout, MoveTo(self.0 + x_offset, self.1))?;
+                queue!(stdout, Print(" "))?;
+            }
+        } else {
+            let y_delta = self.3 - self.1;
+            let x_chunks = (self.2 - self.0) / y_delta;
+            for y_offset in 0..y_delta {
+                for x_offset in (x_chunks * y_offset)..(x_chunks * y_offset + 1) {
+                    queue!(stdout, MoveTo(self.0 + x_offset, self.1 + y_offset))?;
+                    queue!(stdout, Print(" "))?;
+                }
+            }
+        }
+
+        Ok(())
+    }
+}
+
 pub struct Rect(pub u16, pub u16, pub u16, pub u16);
 
 impl Drawable for Rect {
@@ -105,6 +135,13 @@ macro_rules! draw_point {
 }
 
 #[macro_export]
+macro_rules! draw_line {
+    ($out:ident, $x1:expr, $y1:expr, $x2:expr, $y2:expr, $stroke_color:expr) => {
+        crate::shape::Line($x1, $y1, $x2, $y2).draw(&mut $out, $stroke_color, crossterm::style::Color::Reset)?;
+    };
+}
+
+#[macro_export]
 macro_rules! draw_rect {
     ($out:ident, $x:expr, $y:expr, $w:expr, $h:expr, $stroke_color:expr, $fill_color:expr) => {
         crate::shape::Rect($x, $y, $w, $h).draw(&mut $out, $stroke_color, $fill_color)?;
@@ -127,6 +164,7 @@ macro_rules! draw_circle {
 
 pub use draw_background;
 pub use draw_point;
+pub use draw_line;
 pub use draw_circle;
 pub use draw_rect;
 pub use draw_square;

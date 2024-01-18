@@ -20,7 +20,7 @@ fn main() -> Result<()> {
 
         let (w, h) = size()?;
         shape::draw_background!(out, Black);
-        shape::draw_square!(out, w/2, h/2, 5, White, Black);
+        shape::draw_line!(out, 0, 0, 10, 10, White);
 
         queue!(out, MoveTo(w - 1, h - 1))?;
 
