@@ -86,19 +86,19 @@ impl Drawable for Line {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, _fill_color: Color) -> Result<()> {
         queue!(stdout, SetBackgroundColor(stroke_color))?;
         if self.0 == self.2 {
-            for y_offset in 0..self.3 - 1 {
+            for y_offset in 0..self.3 {
                 queue!(stdout, MoveTo(self.0, self.1 + y_offset))?;
                 queue!(stdout, Print(" "))?;
             }
         } else if self.1 == self.3 {
-            for x_offset in 0..self.2 - 1 {
+            for x_offset in 0..self.2 {
                 queue!(stdout, MoveTo(self.0 + x_offset, self.1))?;
                 queue!(stdout, Print(" "))?;
             }
         } else {
             let y_delta = self.3 as i32 - self.1 as i32;
             let x_chunks = (self.2 as i32 - self.0 as i32) / y_delta;
-            for y_offset in 0..y_delta {
+            for y_offset in 0..y_delta + 1 {
                 for x_offset in (x_chunks * y_offset)..(x_chunks * y_offset + 1) {
                     queue!(
                         stdout,
@@ -126,10 +126,17 @@ impl Drawable for Line {
 ///     Point(0, 0),
 ///     Point(10, 0),
 ///     Point(5, 5)
-/// ]);
+/// ], true);
 /// custom_shape.draw(&mut out, Color::White, Color::Reset);
 /// ```
-pub struct CustomShape(pub Vec<Point>);
+///
+/// You can also use the macro:
+///
+/// ```
+/// let out = stdout();
+/// draw_custom_shape!(out, [0, 0, 10, 0, 5, 5], Color::White, true);
+/// ```
+pub struct CustomShape(pub Vec<Point>, pub bool);
 
 impl Drawable for CustomShape {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()> {
@@ -147,9 +154,11 @@ impl Drawable for CustomShape {
             Line(cur.0, cur.1, next.0, next.1).draw(stdout, stroke_color, fill_color)?;
         }
 
-        let first = self.0.first().unwrap();
-        let last = self.0.last().unwrap();
-        Line(last.0, last.1, first.0, first.1).draw(stdout, stroke_color, fill_color)?;
+        if self.1 {
+            let first = self.0.first().unwrap();
+            let last = self.0.last().unwrap();
+            Line(first.0, first.1, last.0, last.1).draw(stdout, stroke_color, fill_color)?;
+        }
 
         Ok(())
     }
@@ -264,6 +273,20 @@ macro_rules! draw_point {
     };
 }
 
+/// A macro that makes it possible to draw custom shapes. See `CustomShape`.
+#[macro_export]
+macro_rules! draw_custom_shape {
+    ($out:ident, [$($x:expr, $y:expr),+], $stroke_color:expr, $close:literal) => {
+        {
+            let mut points = Vec::new();
+            $(
+                points.push(Point($x, $y));
+            )+;
+            CustomShape(points, $close).draw(&mut $out, $stroke_color, crossterm::style::Color::Reset)?;
+        }
+    };
+}
+
 /// A macro that makes it possible to draw a background. See `Line`.
 #[macro_export]
 macro_rules! draw_line {
@@ -302,6 +325,7 @@ macro_rules! draw_circle {
 
 pub use draw_background;
 pub use draw_circle;
+pub use draw_custom_shape;
 pub use draw_line;
 pub use draw_point;
 pub use draw_rect;

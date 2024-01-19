@@ -10,7 +10,7 @@ use std::{
     time::Duration,
 };
 
-use termdraw::shape::*;
+use termdraw::shape::{self, *};
 
 fn main() -> Result<()> {
     let mut out = stdout();
@@ -20,8 +20,8 @@ fn main() -> Result<()> {
         queue!(out, SetCursorStyle::SteadyBlock)?;
 
         let (w, h) = size()?;
-        let custom = CustomShape(vec![Point(0, 0), Point(10, 0), Point(5, 5)]);
-        custom.draw(&mut out, White, Reset)?;
+        draw_background!(out, Black);
+        draw_custom_shape!(out, [0, 0, 10, 0, 5, 5], White, true);
 
         // queue!(out, MoveTo(w - 1, h - 1))?;
 
