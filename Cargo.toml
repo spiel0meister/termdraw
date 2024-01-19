@@ -2,7 +2,10 @@
 name = "termdraw"
 version = "0.1.0"
 edition = "2021"
-author = "spiel0meister"
+authors = ["spiel0meister"]
+description = "A library, which allows you to draw in the terminal."
+license = "MIT"
+repository = "https://github.com/spiel0meister/termdraw"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,17 +1,16 @@
-use std::{
-    io::{stdout, Write, Result},
-    thread::sleep,
-    time::Duration
-};
 use crossterm::{
-    terminal::{Clear, ClearType, size},
-    style::Color::*,
     cursor::SetCursorStyle,
-    queue
+    queue,
+    style::Color::*,
+    terminal::{size, Clear, ClearType},
+};
+use std::{
+    io::{stdout, Result, Write},
+    thread::sleep,
+    time::Duration,
 };
 
-mod shape;
-use shape::*;
+use termdraw::shape::*;
 
 fn main() -> Result<()> {
     let mut out = stdout();
