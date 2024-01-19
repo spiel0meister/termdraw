@@ -1,9 +1,9 @@
 [package]
 name = "termdraw"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["spiel0meister"]
-description = "A library, which allows you to draw in the terminal."
+description = "A crate, which allows you to draw in the terminal."
 license = "MIT"
 repository = "https://github.com/spiel0meister/termdraw"
 
