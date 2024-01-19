@@ -164,7 +164,7 @@ impl Drawable for CustomShape {
     }
 }
 
-/// A struct that makes it possible to draw a line.
+/// A struct that makes it possible to draw a rectangle.
 ///
 /// # Example
 ///
