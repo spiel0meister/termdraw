@@ -1,10 +1,16 @@
 # termdraw
 
-A library, which allows you to draw in the terminal.
+A crate, which allows you to draw in the terminal.
 
 ## Quick Start
 
-...
+You can find this crate on [crates.io](https://crates.io/crates/termdraw).
+
+You can use cargo:
+```console
+cargo add termdraw
+```
+Or include `termdraw = "*"` in the `Cargo.toml` file.
 
 ## Exapmle
 
