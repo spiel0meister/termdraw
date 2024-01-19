@@ -1,3 +1,5 @@
+//! A module that makes it possible to draw shapes.
+
 use crossterm::{
     cursor::MoveTo,
     queue,
@@ -170,7 +172,7 @@ impl Drawable for CustomShape {
 ///
 /// ```
 /// let out = stdout();
-/// (0, 0, 10, 10).draw(&mut out, Color::Black, Color::Reset)
+/// Rect(0, 0, 10, 10).draw(&mut out, Color::Black, Color::Reset)
 /// ```
 /// You can also use the macro:
 /// ```
