@@ -22,7 +22,7 @@ use crossterm::{
     cursor::SetCursorStyle,
     queue
 };
-use termdraw::shape::*;
+use termdraw::shape::{self, *};
 
 fn main() -> Result<()> {
     let mut out = stdout();
