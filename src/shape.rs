@@ -263,7 +263,7 @@ macro_rules! draw_background {
     };
 }
 
-/// A macro that makes it possible to draw a background. See `Point`.
+/// A macro that makes it possible to draw a point. See `Point`.
 #[macro_export]
 macro_rules! draw_point {
     ($out:ident, $x:expr, $y:expr, $point_color:expr) => {
@@ -289,7 +289,7 @@ macro_rules! draw_custom_shape {
     };
 }
 
-/// A macro that makes it possible to draw a background. See `Line`.
+/// A macro that makes it possible to draw a line. See `Line`.
 #[macro_export]
 macro_rules! draw_line {
     ($out:ident, $x1:expr, $y1:expr, $x2:expr, $y2:expr, $stroke_color:expr) => {
@@ -301,7 +301,7 @@ macro_rules! draw_line {
     };
 }
 
-/// A macro that makes it possible to draw a background. See `Rect`.
+/// A macro that makes it possible to draw a rectangle. See `Rect`.
 #[macro_export]
 macro_rules! draw_rect {
     ($out:ident, $x:expr, $y:expr, $w:expr, $h:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -309,7 +309,7 @@ macro_rules! draw_rect {
     };
 }
 
-/// A macro that makes it possible to draw a background. See `Square`.
+/// A macro that makes it possible to draw a square.
 #[macro_export]
 macro_rules! draw_square {
     ($out:ident, $x:expr, $y:expr, $a:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -317,7 +317,7 @@ macro_rules! draw_square {
     };
 }
 
-/// A macro that makes it possible to draw a background. See `Circle`.
+/// A macro that makes it possible to draw a circle. See `Circle`.
 #[macro_export]
 macro_rules! draw_circle {
     ($out:ident, $x:expr, $y:expr, $r:expr, $stroke_color:expr, $fill_color:expr) => {
