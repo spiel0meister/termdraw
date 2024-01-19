@@ -1,15 +1,29 @@
-use std::io::{Stdout, Result, Error};
 use crossterm::{
     cursor::MoveTo,
-    style::{Print, SetBackgroundColor, Color},
+    queue,
+    style::{Color, Print, SetBackgroundColor},
     terminal::size,
-    queue
 };
+use std::io::{Error, Result, Stdout};
 
+/// A drawable is something, that can be drawn in the terminal.
 pub trait Drawable {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()>;
 }
 
+/// A struct that makes it possible to draw a background.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// Background.draw(out, Color::Black, Color::Reset);
+/// ```
+/// You can also use the macro:
+/// ```
+/// let out = stdout();
+/// draw_background!(out, Color::Black);
+/// ```
 pub struct Background;
 
 impl Drawable for Background {
@@ -28,6 +42,19 @@ impl Drawable for Background {
     }
 }
 
+/// A struct that makes it possible to draw a point.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// Point(0, 0).draw(&mut out, Color::White, Color::Reset);
+/// ```
+/// You can also use the macro:
+/// ```
+/// let out = stdout();
+/// draw_point!(out, 0, 0, Color::White);
+/// ```
 pub struct Point(pub u16, pub u16);
 
 impl Drawable for Point {
@@ -40,6 +67,19 @@ impl Drawable for Point {
     }
 }
 
+/// A struct that makes it possible to draw a line.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// Line(0, 0, 10, 10).draw(&mut out, Color::White, Color::Reset);
+/// ```
+/// You can also use the macro:
+/// ```
+/// let out = stdout();
+/// draw_line!(out, 0, 0, 10, 10, Color::White);
+/// ```
 pub struct Line(pub u16, pub u16, pub u16, pub u16);
 
 impl Drawable for Line {
@@ -60,7 +100,13 @@ impl Drawable for Line {
             let x_chunks = (self.2 as i32 - self.0 as i32) / y_delta;
             for y_offset in 0..y_delta {
                 for x_offset in (x_chunks * y_offset)..(x_chunks * y_offset + 1) {
-                    queue!(stdout, MoveTo((self.0 as i32 + x_offset) as u16, (self.1 as i32 + y_offset) as u16))?;
+                    queue!(
+                        stdout,
+                        MoveTo(
+                            (self.0 as i32 + x_offset) as u16,
+                            (self.1 as i32 + y_offset) as u16
+                        )
+                    )?;
                     queue!(stdout, Print(" "))?;
                 }
             }
@@ -70,12 +116,28 @@ impl Drawable for Line {
     }
 }
 
+/// A struct that makes it possible to draw custom shapes.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// let custom_shape = CustomShape(vec![
+///     Point(0, 0),
+///     Point(10, 0),
+///     Point(5, 5)
+/// ]);
+/// custom_shape.draw(&mut out, Color::White, Color::Reset);
+/// ```
 pub struct CustomShape(pub Vec<Point>);
 
 impl Drawable for CustomShape {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()> {
         if self.0.len() < 3 {
-            return Err(Error::new(std::io::ErrorKind::Other, "Not enough vertecies!"));
+            return Err(Error::new(
+                std::io::ErrorKind::Other,
+                "Not enough vertecies!",
+            ));
         }
 
         for i in 0..self.0.len() - 1 {
@@ -93,6 +155,24 @@ impl Drawable for CustomShape {
     }
 }
 
+/// A struct that makes it possible to draw a line.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// (0, 0, 10, 10).draw(&mut out, Color::Black, Color::Reset)
+/// ```
+/// You can also use the macro:
+/// ```
+/// let out = stdout();
+/// draw_rect!(out, 0, 0, 10, 10, Color::White, Color::Black);
+/// ```
+/// If you need to draw a Square, you can also use the `draw_square` macro:
+/// ```
+/// let out = stdout();
+/// draw_square!(out, 0, 0, 10, Color::White, Color::Black);
+/// ```
 pub struct Rect(pub u16, pub u16, pub u16, pub u16);
 
 impl Drawable for Rect {
@@ -102,7 +182,11 @@ impl Drawable for Rect {
                 let x = self.0 + x_offset;
                 let y = self.1 + y_offset;
                 queue!(stdout, MoveTo(x, y))?;
-                if x_offset == 0 || x_offset == self.2 - 1 || y_offset == 0 || y_offset == self.3 - 1 {
+                if x_offset == 0
+                    || x_offset == self.2 - 1
+                    || y_offset == 0
+                    || y_offset == self.3 - 1
+                {
                     queue!(stdout, SetBackgroundColor(stroke_color))?;
                 } else {
                     queue!(stdout, SetBackgroundColor(fill_color))?;
@@ -115,6 +199,19 @@ impl Drawable for Rect {
     }
 }
 
+/// A struct that makes it possible to draw a circle.
+///
+/// # Example
+///
+/// ```
+/// let out = stdout();
+/// Circle(0, 0, 10).draw(&mut out, Color::Black, Color::Reset)
+/// ```
+/// You can also use the macro:
+/// ```
+/// let out = stdout();
+/// draw_circle!(out, 0, 0, 10, Color::White, Color::Black);
+/// ```
 pub struct Circle(pub u16, pub u16, pub u16);
 
 impl Drawable for Circle {
@@ -143,27 +240,43 @@ impl Drawable for Circle {
     }
 }
 
+/// A macro that makes it possible to draw a background. See `Background`.
 #[macro_export]
 macro_rules! draw_background {
     ($out:ident, $background_color:expr) => {
-        crate::shape::Background.draw(&mut $out, $background_color, crossterm::style::Color::Reset)?;
+        crate::shape::Background.draw(
+            &mut $out,
+            $background_color,
+            crossterm::style::Color::Reset,
+        )?;
     };
 }
 
+/// A macro that makes it possible to draw a background. See `Point`.
 #[macro_export]
 macro_rules! draw_point {
     ($out:ident, $x:expr, $y:expr, $point_color:expr) => {
-        crate::shape::Point($x, $y).draw(&mut $out, $point_color, crossterm::style::Color::Reset)?;
+        crate::shape::Point($x, $y).draw(
+            &mut $out,
+            $point_color,
+            crossterm::style::Color::Reset,
+        )?;
     };
 }
 
+/// A macro that makes it possible to draw a background. See `Line`.
 #[macro_export]
 macro_rules! draw_line {
     ($out:ident, $x1:expr, $y1:expr, $x2:expr, $y2:expr, $stroke_color:expr) => {
-        crate::shape::Line($x1, $y1, $x2, $y2).draw(&mut $out, $stroke_color, crossterm::style::Color::Reset)?;
+        crate::shape::Line($x1, $y1, $x2, $y2).draw(
+            &mut $out,
+            $stroke_color,
+            crossterm::style::Color::Reset,
+        )?;
     };
 }
 
+/// A macro that makes it possible to draw a background. See `Rect`.
 #[macro_export]
 macro_rules! draw_rect {
     ($out:ident, $x:expr, $y:expr, $w:expr, $h:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -171,6 +284,7 @@ macro_rules! draw_rect {
     };
 }
 
+/// A macro that makes it possible to draw a background. See `Square`.
 #[macro_export]
 macro_rules! draw_square {
     ($out:ident, $x:expr, $y:expr, $a:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -178,6 +292,7 @@ macro_rules! draw_square {
     };
 }
 
+/// A macro that makes it possible to draw a background. See `Circle`.
 #[macro_export]
 macro_rules! draw_circle {
     ($out:ident, $x:expr, $y:expr, $r:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -186,8 +301,8 @@ macro_rules! draw_circle {
 }
 
 pub use draw_background;
-pub use draw_point;
-pub use draw_line;
 pub use draw_circle;
+pub use draw_line;
+pub use draw_point;
 pub use draw_rect;
 pub use draw_square;
