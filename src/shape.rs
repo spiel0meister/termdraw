@@ -8,7 +8,7 @@ use crossterm::{
 };
 use std::io::{Error, Result, Stdout};
 
-/// A drawable is something, that can be drawn in the terminal.
+/// A *Drawable* is something, that can be drawn in the terminal.
 pub trait Drawable {
     fn draw(&self, stdout: &mut Stdout, stroke_color: Color, fill_color: Color) -> Result<()>;
 }
@@ -179,7 +179,7 @@ impl Drawable for CustomShape {
 /// let out = stdout();
 /// draw_rect!(out, 0, 0, 10, 10, Color::White, Color::Black);
 /// ```
-/// If you need to draw a Square, you can also use the `draw_square` macro:
+/// If you need to draw a Square, you can also use the [`draw_square`](macro.draw_square.html) macro:
 /// ```
 /// let out = stdout();
 /// draw_square!(out, 0, 0, 10, Color::White, Color::Black);
@@ -251,7 +251,7 @@ impl Drawable for Circle {
     }
 }
 
-/// A macro that makes it possible to draw a background. See `Background`.
+/// A macro that makes it possible to draw a background. See [`Background`](struct.Background.html).
 #[macro_export]
 macro_rules! draw_background {
     ($out:ident, $background_color:expr) => {
@@ -263,7 +263,7 @@ macro_rules! draw_background {
     };
 }
 
-/// A macro that makes it possible to draw a point. See `Point`.
+/// A macro that makes it possible to draw a point. See [`Point`](struct.Point.html).
 #[macro_export]
 macro_rules! draw_point {
     ($out:ident, $x:expr, $y:expr, $point_color:expr) => {
@@ -275,7 +275,7 @@ macro_rules! draw_point {
     };
 }
 
-/// A macro that makes it possible to draw custom shapes. See `CustomShape`.
+/// A macro that makes it possible to draw custom shapes. See [`CustomShape`](struct.Point.html).
 #[macro_export]
 macro_rules! draw_custom_shape {
     ($out:ident, [$($x:expr, $y:expr),+], $stroke_color:expr, $close:literal) => {
@@ -289,7 +289,7 @@ macro_rules! draw_custom_shape {
     };
 }
 
-/// A macro that makes it possible to draw a line. See `Line`.
+/// A macro that makes it possible to draw a line. See [`Line`](struct.Line.html).
 #[macro_export]
 macro_rules! draw_line {
     ($out:ident, $x1:expr, $y1:expr, $x2:expr, $y2:expr, $stroke_color:expr) => {
@@ -301,7 +301,7 @@ macro_rules! draw_line {
     };
 }
 
-/// A macro that makes it possible to draw a rectangle. See `Rect`.
+/// A macro that makes it possible to draw a rectangle. See [`Rect`](struct.Rect.html).
 #[macro_export]
 macro_rules! draw_rect {
     ($out:ident, $x:expr, $y:expr, $w:expr, $h:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -309,7 +309,7 @@ macro_rules! draw_rect {
     };
 }
 
-/// A macro that makes it possible to draw a square.
+/// A macro that makes it possible to draw a square. See [`Rect`](struct.Rect.html).
 #[macro_export]
 macro_rules! draw_square {
     ($out:ident, $x:expr, $y:expr, $a:expr, $stroke_color:expr, $fill_color:expr) => {
@@ -317,7 +317,7 @@ macro_rules! draw_square {
     };
 }
 
-/// A macro that makes it possible to draw a circle. See `Circle`.
+/// A macro that makes it possible to draw a circle. See [`Circle`](struct.Rect.html).
 #[macro_export]
 macro_rules! draw_circle {
     ($out:ident, $x:expr, $y:expr, $r:expr, $stroke_color:expr, $fill_color:expr) => {
