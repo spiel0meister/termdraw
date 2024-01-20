@@ -15,13 +15,18 @@ Or include `termdraw = "*"` in the `Cargo.toml` file.
 ## Exapmle
 
 ```rust
-use std::io::{stdout, Write, Result};
 use crossterm::{
-    terminal::{Clear, ClearType, size},
-    style::Color::*,
     cursor::SetCursorStyle,
-    queue
+    queue,
+    style::Color::*,
+    terminal::{Clear, ClearType},
 };
+use std::{
+    io::{stdout, Result, Write},
+    thread::sleep,
+    time::Duration,
+};
+
 use termdraw::shape::{self, *};
 
 fn main() -> Result<()> {
@@ -31,9 +36,12 @@ fn main() -> Result<()> {
         queue!(out, Clear(ClearType::All))?;
         queue!(out, SetCursorStyle::SteadyBlock)?;
 
-        draw_background!(out, Black)?;
-        draw_rect!(out, 50, 10, 100, 100, White, Black)?;
+        draw_background!(out, Black);
+        draw_custom_shape!(out, [0, 0, 10, 0, 5, 5], White, true);
+
         out.flush()?;
+
+        sleep(Duration::from_millis(500));
     }
 }
 ```

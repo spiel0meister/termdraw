@@ -1,13 +1,11 @@
 [package]
 name = "termdraw"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 authors = ["spiel0meister"]
 description = "A crate, which allows you to draw in the terminal."
 license = "MIT"
 repository = "https://github.com/spiel0meister/termdraw"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 crossterm = "0.27.0"
