@@ -1,6 +1,6 @@
 [package]
 name = "termdraw"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 authors = ["spiel0meister"]
 description = "A crate, which allows you to draw in the terminal."

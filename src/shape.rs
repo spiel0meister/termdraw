@@ -275,7 +275,7 @@ macro_rules! draw_point {
     };
 }
 
-/// A macro that makes it possible to draw custom shapes. See [`CustomShape`](struct.Point.html).
+/// A macro that makes it possible to draw custom shapes. See [`CustomShape`](struct.CustomShape.html).
 #[macro_export]
 macro_rules! draw_custom_shape {
     ($out:ident, [$($x:expr, $y:expr),+], $stroke_color:expr, $close:literal) => {
@@ -317,7 +317,7 @@ macro_rules! draw_square {
     };
 }
 
-/// A macro that makes it possible to draw a circle. See [`Circle`](struct.Rect.html).
+/// A macro that makes it possible to draw a circle. See [`Circle`](struct.Circle.html).
 #[macro_export]
 macro_rules! draw_circle {
     ($out:ident, $x:expr, $y:expr, $r:expr, $stroke_color:expr, $fill_color:expr) => {
